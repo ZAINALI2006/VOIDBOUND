@@ -9,6 +9,8 @@
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0;min-height:100%;overflow-x:clip}
 .nb{display:block;margin-top:8px;color:#ff8fa3;font-size:13px}
+.fact{margin:14px 0;padding:12px 14px;background:rgba(255,216,107,.12);border:1px solid #ffd86b;border-radius:12px;font-size:15px;line-height:1.7;backdrop-filter:blur(3px)}
+.fact b{color:#ffd86b}
 body{background:linear-gradient(160deg,var(--bg1),var(--bg2)) fixed;color:var(--tx);font-family:system-ui,"Segoe UI",Tahoma,sans-serif;line-height:1.6}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg1);z-index:10}
 #hd{position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
@@ -175,9 +177,35 @@ function go(){i=0;b=110;p=0;ch=[];ask()}
 function ask(){
 if(i>=D.length)return end();
 head();const d=D[i];$("bg").innerHTML=BG[d[0]];
-$("m").innerHTML=`<p class="sub">المرحلة ${d[0]+1} من 4: ${ST[d[0]]}</p><h2>${d[1]}</h2>`+d[2].map((o,k)=>`<button class="card" ${dis(o)?"disabled":""} onclick="pick(${k})"><b>${o[0]}</b><span class="c">${f(o[1]*1000)} $</span>${dis(o)?'<small class="nb">مش هتعرف تشتري ده</small>':""}</button>`).join("")+(d[2].every(o=>dis(o))?SAC:"");
+$("m").innerHTML=`<p class="sub">المرحلة ${d[0]+1} من 4: ${ST[d[0]]}</p><h2>${d[1]}</h2>`+d[2].map((o,k)=>`<button class="card" ${dis(o)?"disabled":""} onclick="pick(${k})"><b>${o[0]}</b><span class="c">${f(o[1]*1000)} $</span>${dis(o)?'<small class="nb">مش هتعرف تشتري ده</small>':""}</button>`).join("")+ft(i)+(d[2].every(o=>dis(o))?SAC:"");
 cap(d[2].every(o=>dis(o))?"الفلوس خلصت ومش هتقدر تشتري اللي جاي. هتضحّي بحاجة عشان تكمّل؟":CAP[i]);scrollTo(0,0)}
 function pick(k){snd(480+i*45);const o=D[i][2][k],j=i;b-=o[1];p+=o[2];ch[j]=k;i++;EV[j]?event(EV[j]):ask()}
+const FD=[
+["في المهمات الحقيقية كل واحد من الفريق ليه مسؤولية: مسؤول المسار والطيران، ومسؤول المركبة والطاقة، ومسؤول العلوم، ومسؤول الطاقم والإمدادات."],
+["تقييم المهمة الفضائية بيتحسب بأوزان: الأهداف 30%، والعلوم 20%، والكفاءة 15%، وصحة الطاقم 15%، وإدارة المخاطر 10%، وتعاون الفريق 10%."],
+["المهندسين بيسيبوا هامش أمان 20% في أنظمة المركبة، وكل متطلب لازم يتتبع لهدف المهمة."],
+["ناسا بتخطط لحوالي 3,035 سعر حراري للشخص في اليوم، وبتزوّد 200 سعر عن كل ساعة خروج للفضا."],
+["الإشعاع في الفضا نوعين: عواصف الشمس والأشعة الكونية. وكتلة الدرع بتتحسب من الكثافة السطحية × المساحة: ملجأ 10 جم/سم² على 10 م² بيزوّد حوالي 1,000 كجم."],
+["وقود الرحلة بيعتمد على المسار والمناورات ووزن المركبة والوقت، مش على المسافة لوحدها."],
+["الاتصال بالأرض بيتحسب بميزانية إشارة ونوافذ زمنية، لأن محطات الأرض مش دايمًا شايفة المركبة."],
+["في المحاكاة الحقيقية، لو نظام الحياة ماخدش طاقة كفاية أو الوقود خلص قبل الوصول، المهمة بتفشل تلقائيًا."],
+["الأكل المجفف خفيف وفيه طاقة كتير بالنسبة للوزن، بس بيحتاج مية من مخزون المركبة عشان يتبلّل. أما الأكل الجاهز فبيشيل مية في وزنه.","وزن الأكل مش بس السعرات: بيتحسب من عبوات الوجبات والتغليف كمان."],
+["صحة الطاقم 15% من تقييم المهمة، يعني الرعاية الطبية والأكل والراحة جزء من نجاحها."],
+["الألواح الشمسية بتضعف مع البُعد عن الشمس بنسبة 1 على مربع المسافة، فعند زحل تدّي حوالي 1% بس من اللي بتدّيه عند الأرض.","مولّد RTG بيشتغل من غير شمس، بس قدرته قليلة ومينفعش يشغّل محرك كهربائي قوي.","لازم الطاقة المتاحة تكون 120% على الأقل من المطلوب، والبطارية لازم تكفي الأحمال الحرجة طول فترة الكسوف."],
+["تعاون الفريق 10% من تقييم المهمة، وصحة الطاقم 15%."],
+["المحرك الأيوني (Hall) عادمه سريع جدًا، فبيحرق وقود قليل، بس محتاج كهربا كتير ووقت طويل.","وقود الأكسجين السائل والكيروسين (حوالي 300 ثانية) كثيف وخزاناته صغيرة، والهيدروجين السائل (حوالي 450) أقوى بس خزاناته ضخمة ومعزولة.","المحرك النووي الحراري (حوالي 900 ثانية) ضعف كفاءة الكيميائي، بس بيزوّد وزن دروع المفاعل."],
+["إدارة المخاطر 10% من التقييم، ولازم أي مكوّن مهم يبقى ليه احتياطي."],
+["قبل ما يتحسب أي سكور، التصميم لازم يعدّي بوابات جدوى: لو عدّى قدرة الصاروخ أو الوقود خلص قبل الوصول يفشل فورًا."],
+["معادلة الصاروخ: كمية الوقود بتزيد بشكل أُسّي مع التغيير المطلوب في السرعة، وكل مناورة بتتحسب لوحدها."]
+];
+const FE={a:FD[0],s:FD[4],o:FD[7],e:FD[12],r:FD[5]};
+const FG=FD.flat().concat(["المركبة بتتخلص من حرارتها بالإشعاع بس، عشان كده بتحتاج رادياتيرات بحجم محسوب.","المحاكاة الحقيقية بتحسب كل حاجة بالكيلوجرام والثانية والمتر والنيوتن والوات، وبعدين تحوّلها لوحدات سهلة.","المحركات الكهربائية قوتها ضعيفة، فوقت الرحلة بيتحسب بمحاكاة المسار مش بقسمة المسافة على السرعة."]);
+const fc=t=>`<div class="fact"><b>💡 هل تعلم؟</b><br>${t}</div>`;
+const rp=a=>a[Math.floor(Math.random()*a.length)];
+let CE=null;
+const ft=j=>Math.random()<.7?fc(rp(FD[j])):"";
+const fe=()=>CE&&FE[CE.k]?fc(rp(FE[CE.k])):"";
+const fg=()=>fc(rp(FG));
 let OS=[];
 const cheap=D.map(d=>Math.min(...d[2].map(o=>o[1])));
 const worst=k=>EV[k]?Math.max(0,...EV[k].o.filter(o=>o[1]===3).map(o=>o[2])):0;
@@ -187,7 +215,7 @@ const SAC=`<div class="card" style="cursor:default;border-color:#ff8fa3"><b>💸
 function sac(){const own=[...Array(i).keys()].filter(j=>ch[j]>=0);let m;
 if(!own.length){b+=10;m="الإدارة اتدخلت وسلّفتك 10,000 $."}else{const j=own[Math.floor(Math.random()*own.length)],o=D[j][2][ch[j]];b+=o[1];lose(j);m=`ضحّيت بحاجة عشان تكمّل: خسرت ${D[j][1]}، ورجعلك ${f(o[1]*1000)} $.`}
 snd(200);head();$("m").innerHTML=`<div class="card" style="cursor:default;border-color:#ff8fa3"><b>⚠️ ${m}</b></div><button class="btn" onclick="ask()">كمّل الرحلة</button>`;cap(m);scrollTo(0,0)}
-function event(e){head();$("bg").innerHTML=EVBG[e.k];OS=[...e.o].sort(()=>Math.random()-.5);
+function event(e){CE=e;head();$("bg").innerHTML=EVBG[e.k];OS=[...e.o].sort(()=>Math.random()-.5);
 $("m").innerHTML=`<p class="sub">⚠️ حصلت مشكلة في الرحلة!</p><h2>${e.t}</h2><div class="card" style="cursor:default">${e.c}</div>`+OS.map((o,k)=>`<button class="card" onclick="fix(${k})"><b>${o[0]}</b></button>`).join("");
 snd(300);cap(e.c);scrollTo(0,0)}
 function fix(k){const o=OS[k],ok=o[1]===0;
@@ -195,7 +223,7 @@ if(ok){b+=o[2];p+=o[4]||0}
 if(o[1]===1||o[1]===2){if(ch[o[2]]>=0)lose(o[2]);else b=Math.max(0,b-4)}
 if(o[1]===3)b=Math.max(0,b-o[2]);
 snd(ok?760:150);head();
-$("m").innerHTML=`<div class="card" style="cursor:default;border-color:${ok?"#6ee7b7":"#ff8fa3"}"><b>${ok?"✅":o[1]===3&&o[2]<=2?"⚠️":"❌"} ${o[3]}</b></div><button class="btn" onclick="ask()">كمّل الرحلة</button>`;
+$("m").innerHTML=`<div class="card" style="cursor:default;border-color:${ok?"#6ee7b7":"#ff8fa3"}"><b>${ok?"✅":o[1]===3&&o[2]<=2?"⚠️":"❌"} ${o[3]}</b></div>${fe()}<button class="btn" onclick="ask()">كمّل الرحلة</button>`;
 cap(o[3]);scrollTo(0,0)}
 function syn(){const t=a=>ch[a]===0,c=a=>ch[a]===1,n=[];let d=0;
 const R=(q,v,m)=>{if(q){d+=v;n.push((v>0?"✅ ":"⚠️ ")+m)}};
@@ -220,7 +248,7 @@ if(pct>=99.5)nt.unshift("🏆 مهمة مثالية! وصلت لأعلى نسب�
 if(ms.length)nt.push("❌ خسرت: "+ms.map(j=>D[j][1]).join("، "));
 if(raw>pct&&b>=10)nt.push("⚠️ الخسائر خلّت المهمة أصعب بكتير، فنسبة نجاحك اتخفضت.");
 const e=END[k];$("bg").innerHTML="";if(EVV[k]){try{speechSynthesis.cancel()}catch(x){}$("cap").hidden=false;$("cap").textContent=e[1]}else cap(e[1]);
-$("m").innerHTML=`<h1>${e[0]}</h1>${EVV[k]?`<video id="vd" src="${EVV[k]}" autoplay loop playsinline disablepictureinpicture disableremoteplayback oncontextmenu="return false"></video><p class="sub" id="uh" hidden>🔇 المس الشاشة عشان الصوت يشتغل</p>`:scene(k)}<div class="t"><p style="animation-delay:.3s">${e[1]}</p><p style="animation-delay:1.2s">نسبة نجاح المهمة: <b class="sc">${Math.round(pct)}%</b><br>الوقود المتبقي: <b>${f(b*1000)} $</b></p>${k==="saturn"&&b<10&&raw>=92?`<p style="animation-delay:2s">النسبة كانت كفاية لبلوتو، بس الوقود أقل من 10,000 $.</p>`:""}${nt.length?`<p style="animation-delay:2.6s"><b>ملاحظات الخبراء:</b></p>`+nt.map((x,q)=>`<p style="animation-delay:${3+q*.4}s">${x}</p>`).join(""):""}</div><button class="btn" onclick="go()">العب تاني</button>`;scrollTo(0,0);if(EVV[k])uv()}
+$("m").innerHTML=`<h1>${e[0]}</h1>${EVV[k]?`<video id="vd" src="${EVV[k]}" autoplay loop playsinline disablepictureinpicture disableremoteplayback oncontextmenu="return false"></video><p class="sub" id="uh" hidden>🔇 المس الشاشة عشان الصوت يشتغل</p>`:scene(k)}<div class="t"><p style="animation-delay:.3s">${e[1]}</p><p style="animation-delay:1.2s">نسبة نجاح المهمة: <b class="sc">${Math.round(pct)}%</b><br>الوقود المتبقي: <b>${f(b*1000)} $</b></p>${k==="saturn"&&b<10&&raw>=92?`<p style="animation-delay:2s">النسبة كانت كفاية لبلوتو، بس الوقود أقل من 10,000 $.</p>`:""}${nt.length?`<p style="animation-delay:2.6s"><b>ملاحظات الخبراء:</b></p>`+nt.map((x,q)=>`<p style="animation-delay:${3+q*.4}s">${x}</p>`).join(""):""}</div>${fg()}<button class="btn" onclick="go()">العب تاني</button>`;scrollTo(0,0);if(EVV[k])uv()}
 intro();
 </script>
 </body>
